@@ -1,0 +1,7 @@
+services:
+  cartofia-mc-bot:
+    container_name: cartofia-mc-bot
+    build: .
+    restart: unless-stopped
+    env_file:
+      - .env
