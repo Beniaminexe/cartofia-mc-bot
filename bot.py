@@ -38,6 +38,37 @@ last_server_online: bool | None = None
 
 # ---- Minecraft status helpers ----
 
+def build_cartofia_embed() -> discord.Embed:
+    """
+    Build a nice looking embed instead of a flat text line.
+    """
+    embed = discord.Embed(
+        title="🌌 Cartofia SMP",
+        description=(
+            "Welcome to **[MC] – Cartofia**\n"
+            "Dive into a cozy survival world with a hint of chaos.\n\n"
+            f"🧭 **IP:** `{CARTOFIA_IP}`\n"
+            "🎮 **Edition:** Java\n"
+            "📦 **Mode:** Survival • Community-friendly"
+        ),
+        color=discord.Color.blurple(),
+    )
+
+    # Optional thumbnail – replace with your own logo URL if you want
+    # embed.set_thumbnail(url="https://example.com/cartofia-logo.png")
+
+    embed.set_footer(text="Use !ip to get the server details again.")
+    return embed
+
+
+async def send_cartofia_ad(channel: discord.TextChannel):
+    """
+    Send the Cartofia ad embed into a channel.
+    """
+    embed = build_cartofia_embed()
+    await channel.send(embed=embed)
+
+
 def _get_status_blocking():
     """Blocking call to ping the Minecraft server (runs in thread)."""
     server = JavaServer.lookup(f"{MC_HOST}:{MC_PORT}")
@@ -88,6 +119,19 @@ def parse_rcon_list(resp: str) -> list[str]:
 
 
 # ---- Events ----
+
+@bot.event
+async def on_ready():
+    print(f"Logged in as {bot.user} (ID: {bot.user.id})")
+    print("------")
+
+    # Auto-post ad in a specific channel on startup (optional)
+    if AD_CHANNEL_ID:
+        channel = bot.get_channel(AD_CHANNEL_ID)
+        if channel:
+            await send_cartofia_ad(channel)
+        else:
+            print(f"Could not find channel with ID {AD_CHANNEL_ID}")
 
 @bot.event
 async def on_ready():
@@ -164,7 +208,7 @@ async def update_presence():
                 try:
                     if server_online:
                         await channel.send("🟢 **Cartofia server is now online!**")
-                        await channel.send("IP **answers-advertising.gl.joinmc.link**")
+#                        await channel.send("IP **answers-advertising.gl.joinmc.link**")
                     else:
                         await channel.send("🔴 **Cartofia server is now offline!**")
                 except Exception as e:
@@ -237,6 +281,13 @@ async def online_command(ctx: commands.Context):
 
     await msg.edit(content=None, embed=embed)
 
+@bot.command(name="ip")
+async def ip_command(ctx: commands.Context):
+    """
+    Show the Cartofia server IP in a nice embed.
+    Usage: !ip
+    """
+    await send_cartofia_ad(ctx.channel)
 
 # ---- Main ----
 
