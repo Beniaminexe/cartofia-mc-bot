@@ -26,6 +26,8 @@ if not DISCORD_TOKEN:
 
 RCON_ENABLED = bool(RCON_PASSWORD)
 
+CARTOFIA_IP = "answers-advertising.gl.joinmc.link"
+
 # ---- Discord setup ----
 
 intents = discord.Intents.default()
@@ -126,12 +128,12 @@ async def on_ready():
     print("------")
 
     # Auto-post ad in a specific channel on startup (optional)
-    if AD_CHANNEL_ID:
-        channel = bot.get_channel(AD_CHANNEL_ID)
+    if STATUS_CHANNEL_ID:
+        channel = bot.get_channel(STATUS_CHANNEL_ID)
         if channel:
             await send_cartofia_ad(channel)
         else:
-            print(f"Could not find channel with ID {AD_CHANNEL_ID}")
+            print(f"Could not find channel with ID {STATUS_CHANNEL_ID}")
 
 @bot.event
 async def on_ready():
