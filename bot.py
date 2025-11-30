@@ -124,10 +124,8 @@ def parse_rcon_list(resp: str) -> list[str]:
 
 @bot.event
 async def on_ready():
-    print(f"Logged in as {bot.user} (ID: {bot.user.id})")
-    print("------")
+    print(f"✅ Logged in as {bot.user} (ID: {bot.user.id})")
 
-    # Auto-post ad in a specific channel on startup (optional)
     if STATUS_CHANNEL_ID:
         channel = bot.get_channel(STATUS_CHANNEL_ID)
         if channel:
@@ -135,11 +133,9 @@ async def on_ready():
         else:
             print(f"Could not find channel with ID {STATUS_CHANNEL_ID}")
 
-@bot.event
-async def on_ready():
-    print(f"✅ Logged in as {bot.user} (ID: {bot.user.id})")
     if not update_presence.is_running():
         update_presence.start()
+
 
 
 # ---- Background task: presence + channel topic + announcements ----
@@ -210,7 +206,7 @@ async def update_presence():
                 try:
                     if server_online:
                         await channel.send("🟢 **Cartofia server is now online!**")
-                        await channel.send(send_cartofia_ad(channel))
+                        await send_cartofia_ad(channel)
                     else:
                         await channel.send("🔴 **Cartofia server is now offline!**")
                 except Exception as e:
@@ -277,9 +273,10 @@ async def online_command(ctx: commands.Context):
     )
     embed.add_field(
         name="Address",
-        value=f"`{MC_HOST}:{MC_PORT}`",
+        value=f"`{CARTOFIA_IP}`",
         inline=False,
     )
+
 
     await msg.edit(content=None, embed=embed)
 
