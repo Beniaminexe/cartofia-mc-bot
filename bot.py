@@ -164,6 +164,7 @@ async def update_presence():
                 try:
                     if server_online:
                         await channel.send("🟢 **Cartofia server is now online!**")
+                        await channel.send("IP **answers-advertising.gl.joinmc.link**")
                     else:
                         await channel.send("🔴 **Cartofia server is now offline!**")
                 except Exception as e:
