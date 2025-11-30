@@ -4,7 +4,7 @@ import asyncio
 import discord
 from discord.ext import commands, tasks
 from mcstatus import JavaServer
-from mcrcon import Mcrcon
+from mcrcon import MCRcon
 
 # ---- Environment config ----
 
@@ -52,7 +52,7 @@ async def get_status_async():
 
 def _rcon_list_blocking() -> str:
     """Blocking RCON /list call."""
-    with Mcrcon(RCON_HOST, RCON_PASSWORD, port=RCON_PORT) as mcr:
+    with MCRcon(RCON_HOST, RCON_PASSWORD, port=RCON_PORT) as mcr:
         # RCON commands do NOT take the leading slash
         resp = mcr.command("list")
         return resp
